@@ -8,7 +8,9 @@ Then navigate to the `ghg` directory and run `stack build`. It should do everyth
 
 ## Adding new packages
 
-Edit `package.yaml` and add the desired package to `dependencies:`.
+In all cases, run `stack build` again after changing things.
+
+Most of the time you can just edit `package.yaml` and add the desired package to `dependencies:`.
 
 If that doesn't work, check [Stackage](https://www.stackage.org) to see if it's available there. It may be in one resolver (eg. LTS 12.18), but not another (eg. Nightly 2018-11-17, the one we're using). If this is the case, change the resolver in `stack.yaml`.
 
