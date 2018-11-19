@@ -10,7 +10,8 @@ import Graphics.Gloss.Interface.Pure.Game
 data Game = Play {for   :: Foreground,
                   back  :: Background,
                   wtf   :: Word2Find,
-                  fall  :: FallingBlock}
+                  fall  :: FallingBlock,
+                  word  :: String}
           | Menu {menu :: Menu}
 
 data Tetramino = I | O | T | S | Z | J | L
