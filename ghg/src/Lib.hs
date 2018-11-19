@@ -32,8 +32,6 @@ initial_game width height = Play{..}
     word = ""
     rands = []
 
-data Tetramino = I | O | T | S | Z | J | L deriving Show
-
 data Background = Background [[(Maybe Char, Int)]] deriving Show
 
 data Foreground = Foreground [[Maybe Tetramino]] deriving Show
@@ -59,7 +57,7 @@ data FallingBlock = FallingBlock Tetramino (Float, Float) Rotation deriving Show
 
 data Rotation = North | South | East | West deriving Show
 
-data Tetramino = I | O | T | S | Z | J | L deriving (Ord, Eq, Enum, Bounded)
+data Tetramino = I | O | T | S | Z | J | L deriving (Ord, Eq, Enum, Bounded, Show)
 
 -- Rotation about the origin
 rotRight90 :: (Float, Float) -> (Float, Float)
