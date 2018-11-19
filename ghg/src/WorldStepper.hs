@@ -12,15 +12,12 @@ worldHeight = 18
 worldWidth :: Int
 worldWidth = 10
 
-hasCollided :: Foreground -> [(Int, Int)] -> Bool
-hasCollided (Foreground tetras) = foldr f k
+hasCollided :: Fg -> [(Int, Int)] -> Bool
+hasCollided (Fg tetras) = foldr f k
   where
     k = False
     f _ True = True
-    f (col, row) False
-      | col < 0 || col >= worldHeight = False
-      | row >= worldHeight = False
-      | otherwise = isJust ((tetras !! col) !! row)
+    f coords False = elem coords (map fst tetras)
 
 merge :: (Ord a) => [a] -> [a] -> [a]
 merge [] ys = ys
