@@ -28,7 +28,7 @@ rendMenu (M i) = Pictures [Color (red) (Polygon [(-170,-50),(170,-50),(170,50),(
 rendBack :: Background -> [Picture]
 rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where
   f :: (Maybe Char, Int) -> Picture
-  f (_, x) = Color (makeColor 1 1 1 (g x)) (basicBlock blockSize blockSize)
+  f (_, x) = Color (makeColor 0 0 0 (1 - g x)) (basicBlock blockSize blockSize)
   g :: Int -> Float
   g x = exp (-(((fromIntegral x) + 1)/ 3))
 
