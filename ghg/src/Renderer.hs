@@ -21,9 +21,14 @@ game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2)
 
 rendMenu :: Menu -> Picture
 rendMenu (M i) = Pictures [Color (red) (Polygon [(-170,-50),(170,-50),(170,50),(-170,50)]),
-                              Translate (-140) (-25) (Scale 0.4 0.4  (Text "Play Game")),
+                              Translate (-140) (-25) (Scale 0.4 0.4  (Text s)),
                               Color (blue) (Line [(-170,-50),(170,-50),(170,50),(-170,50),(-170,-50)])
                              ]
+  where
+    s = case i of
+      1 -> "Press Space to Play Game"
+      2 -> "Game Over: Try Again? (Press space noob)"
+      _ -> "Something went wrong"
 
 rendBack :: Background -> [Picture]
 rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where

@@ -26,7 +26,7 @@ getMove (EventKey (SpecialKey key) Down _ _) =
   case key of
     KeyUp    -> Just (Rotate Right)
     -- KeyDown  -> Just (Rotate Left)
-    KeyEnter -> Just Start
+    KeySpace -> Just Start
     KeyRight -> Just (Move Right)
     KeyLeft  -> Just (Move Left)
     KeyDown -> Just (FastDrop True)

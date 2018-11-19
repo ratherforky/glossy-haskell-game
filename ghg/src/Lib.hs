@@ -17,7 +17,7 @@ worldHeight = 18
 worldWidth :: Int
 worldWidth = 10
 
-data Fg = Fg [((Int, Int), Tetramino)] deriving Show
+data Fg = Fg { unFg :: [((Int, Int), Tetramino)] } deriving Show
 
 data Game = Play {for   :: Fg,
                   back  :: Background,
@@ -28,7 +28,8 @@ data Game = Play {for   :: Fg,
                   accTime :: Float,
                   acceleration :: Float}
           | Menu {menu :: Menu,
-                  rands :: [Float]}
+                  rands :: [Float]
+                  }
           deriving Show
 
 initial_game :: [Float] -> Game

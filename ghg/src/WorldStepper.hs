@@ -27,6 +27,7 @@ worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu rs) = Menu menu rs
 worldStepper dt game
   | (accTime game) + dt < (interval / (acceleration game)) = game { accTime = (accTime game) + dt }
+  | any (\((y,_), _) -> y == 0) (unFg . for $ game)= Menu (M 2) (rands game)
   | otherwise = game { for = for'''
                      , fall = chosenBlock
                      , accTime = 0
@@ -46,6 +47,8 @@ worldStepper dt game
                then moveToForeground fall' for'
                else for'
     for''' = removeFullRows for''
+
+    -- for'''' = 
 
 removeFullRows :: Fg -> Fg
 removeFullRows (Fg xs) = Fg (fst . foldr f' ([],0) $ ys)  where
