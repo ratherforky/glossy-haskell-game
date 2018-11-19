@@ -33,13 +33,13 @@ fallBlock (FallingBlock tet (y, x) rot) = FallingBlock tet (y+1, x) rot
 worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu) = Menu menu
 worldStepper dt game
-  | (accTime game) + dt < interval = game { accTime = (accTime game) + dt }
+  | (accTime game) + dt < (interval / (acceleration game)) = game { accTime = (accTime game) + dt }
   | otherwise = game { for = for'''
                      , fall = chosenBlock
                      , accTime = 0
                      , rands = rands' }
   where
-    (Play for' back' wtf' fall' _ (r:rands') accTime') = game
+    (Play for' back' wtf' fall' _ (r:rands') accTime' _) = game
 
     fall'' = fallBlock fall'
     collided = hasCollided for' (fall'')
