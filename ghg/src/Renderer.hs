@@ -15,7 +15,7 @@ game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2)
   yLength = (fromIntegral (length bArr)) * blockSize
   xLength = (fromIntegral (length (head bArr))) * blockSize
   bg :: [Picture]
-  bg      = [Color (makeColor 0.5 0.5 0.5 1) (basicBlock xLength yLength)]
+  bg      = [Color (makeColor 0.8 0.8 0.8 1) (basicBlock xLength yLength)]
   g :: Background -> [[(Maybe Char, Int)]]
   g (Background bs) = bs
 
@@ -30,7 +30,7 @@ rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where
   f :: (Maybe Char, Int) -> Picture
   f (_, x) = Color (makeColor 0 0 0 (1 - g x)) (basicBlock blockSize blockSize)
   g :: Int -> Float
-  g x = exp (-(((fromIntegral x) + 1)/ 3))
+  g x = exp (-(((fromIntegral x))/ 3))
 
 rendFor :: Fg -> Float -> [Picture]
 rendFor (Fg ps) s = (fmap (f s)) ps where
