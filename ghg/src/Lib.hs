@@ -7,14 +7,16 @@ module Lib
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 
-data Game = Play {for   :: Foreground,
+data Fg = Fg [((Int, Int), Tetramino)]
+
+data Game = Play {for   :: Fg,
                   back  :: Background,
                   wtf   :: Word2Find,
                   fall  :: FallingBlock,
                   accTime :: Float}
           | Menu {menu :: Menu}
 
-data Tetramino = I | O | T | S | Z | J | L
+data Tetramino = I | O | T | S | Z | J | L deriving (Ord, Eq)
 
 data Foreground = Foreground [[Maybe Tetramino]]
 
