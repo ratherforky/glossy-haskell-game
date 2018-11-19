@@ -25,7 +25,7 @@ data Game = Play {for   :: Fg,
 initial_game :: Int -> Int -> Game
 initial_game width height = Play{..}
   where
-    for  = Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
+    for  = []--Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
     back = Background ((map . map) (const (Nothing,0)) [[1..width] | _ <- [1..height]])
     wtf  = Word2Find "hello"
     fall = FallingBlock S (0, fromIntegral $ width `div` 2) North
