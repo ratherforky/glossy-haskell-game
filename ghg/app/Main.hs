@@ -6,6 +6,4 @@ import WorldStepper (worldStepper)
 import Renderer (game2Pic)
 
 main :: IO ()
-main = play FullScreen black 60 (Menu (M 0)) game2Pic eventHandler worldStepper
-
-
+main = play (InWindow "Fun" (1000,1000) (100,100)) white 60 (initData) game2Pic eventHandler worldStepper
