@@ -1,4 +1,4 @@
-module Lib 
+module Lib
   ( module Lib
   , module Graphics.Gloss
   , module Graphics.Gloss.Interface.Pure.Game
@@ -17,7 +17,7 @@ data Tetramino = I | O | T | S | Z | J | L
 
 data Foreground = Foreground [[Maybe Tetramino]]
 
-data Background = Background [[Maybe (Char, Int)]]
+data Background = Background [[(Maybe Char, Int)]]
 
 data Word2Find = Word2Find String
 
