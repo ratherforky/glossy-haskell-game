@@ -56,12 +56,10 @@ worldStepper dt game
 
 removeFullRows :: Fg -> Fg
 removeFullRows (Fg xs) = Fg (fst . foldr f' ([],0) $ ys)  where
-  ys = ((groupBy f) . (sortBy g)) xs
-  f :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Bool
-  f ((a,_),_) ((b,_),_) = a == b
-  g :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Ordering
-  g ((a,_),_) ((b,_),_) = compare a b
+  ys = groupBy (f (==)) . sortBy (f compare) $ xs
+  f :: (Int -> Int -> b) -> ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> b
+  f g ((a,_),_) ((b,_),_) = g a b
   f' :: [((Int,Int),Tetramino)] -> ([((Int,Int),Tetramino)], Int) -> ([((Int,Int),Tetramino)], Int)
   f' ps (ts, offset)
-    | (/= worldWidth) . length $ ps = (map (\((y, x), t) -> ((y + offset, x), t)) ps ++ ts, offset)
+    | length ps /= worldWidth = (map (\((y, x), t) -> ((y + offset, x), t)) ps ++ ts, offset)
     | otherwise = (ts, offset + 1)
