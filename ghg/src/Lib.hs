@@ -10,7 +10,13 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import System.Random
 
-data Fg = Fg [((Int, Int), Tetramino)]
+worldHeight :: Int
+worldHeight = 18
+
+worldWidth :: Int
+worldWidth = 10
+
+data Fg = Fg [((Int, Int), Tetramino)] deriving Show
 
 data Game = Play {for   :: Fg,
                   back  :: Background,
@@ -25,12 +31,13 @@ data Game = Play {for   :: Fg,
 initial_game :: Int -> Int -> Game
 initial_game width height = Play{..}
   where
-    for  = []--Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
-    back = Background ((map . map) (const (Nothing,0)) [[1..width] | _ <- [1..height]])
-    wtf  = Word2Find "hello"
-    fall = FallingBlock S (0, fromIntegral $ width `div` 2) North
-    word = ""
-    rands = []
+    for     = Fg []--Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
+    back    = Background ((map . map) (const (Nothing,0)) [[1..width] | _ <- [1..height]])
+    wtf     = Word2Find "hello"
+    fall    = FallingBlock S (0, fromIntegral $ width `div` 2) North
+    word    = ""
+    rands   = randomVals 1
+    accTime = 0
 
 data Background = Background [[(Maybe Char, Int)]] deriving Show
 
@@ -73,7 +80,6 @@ rotRight90Point (y', x') (y, x) = (\(y, x) -> (y + y', x + x')) $ rotRight90 (y 
 
 rot180Point p' = rotRight90Point p' . rotRight90Point p'
 rotLeft90Point p' = rotRight90Point p' . rotRight90Point p' . rotRight90Point p'
-
 
 
 basePoints :: Tetramino -> [(Float, Float)]

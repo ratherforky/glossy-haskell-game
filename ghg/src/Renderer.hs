@@ -34,8 +34,8 @@ rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where
 
 rendFor :: Fg -> Float -> [Picture]
 rendFor (Fg ps) s = (fmap (f s)) ps where
-  f :: ((Int,Int),Tetramino) -> Float -> Picture
-  f ((y,x) ,t) s = rendTetramino t (Translate ((fromIntegral x) * blockSize) (s - (fromIntegral y) * blockSize) (basicBlock blockSize blockSize))
+  f :: Float -> ((Int,Int),Tetramino) -> Picture
+  f s ((y,x) ,t) = rendTetramino t (Translate ((fromIntegral x) * blockSize) (s - (fromIntegral y) * blockSize) (basicBlock blockSize blockSize))
 
 rendFall :: FallingBlock -> Float -> [Picture]
 rendFall b@(FallingBlock tet _ _) t = ((fmap ((rendTetramino tet) . (f t))) . blockPoints) b where

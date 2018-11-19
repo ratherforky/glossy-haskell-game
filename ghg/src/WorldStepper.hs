@@ -6,19 +6,13 @@ import Data.Maybe
 interval :: Float
 interval = 0.5
 
-worldHeight :: Int
-worldHeight = 18
-
-worldWidth :: Int
-worldWidth = 10
-
 hasCollided :: Fg -> [(Int, Int)] -> Bool
 hasCollided (Fg tetras) = foldr f k
   where
     k = False
     f _ True = True
     f (row, col) False
-      | row >= worldHeight = True
+      | row > worldHeight = True
       | otherwise = elem (row, col) (map fst tetras)
 
 merge :: (Ord a) => [a] -> [a] -> [a]
@@ -36,29 +30,36 @@ moveToForeground fb@(FallingBlock tetra _ _) (Fg ts) =
 
 -- TODO: ADD TO THIS
 newFallingBlock :: Float -> FallingBlock
-newFallingBlock r = FallingBlock ([minBound..maxBound] !! (floor 7*r))
+newFallingBlock r = FallingBlock ([minBound..maxBound] !! ((floor r) `mod` 7))
                                  (0, 5)
                                  North
+
+fallBlock :: FallingBlock -> FallingBlock
+fallBlock (FallingBlock tet (y, x) rot) = FallingBlock tet (y+1, x) rot
 
 worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu) = Menu menu
 worldStepper dt game
   | (accTime game) + dt < interval = game { accTime = (accTime game) + dt }
   | otherwise = game { for = for''
-                     , fall = fall''
-                     , accTime = 0 }
+                     , fall = chosenBlock
+                     , accTime = 0
+                     , rands = rands' }
   where
-    (Play for' back' wtf' fall' accTime' rands') = game
+    (Play for' back' wtf' fall' _ (r:rands') accTime') = game
     
-    fall'' = fall' { tetShape = chosenTetShape }
-    collided = hasCollided for' tetShape''
-    chosenTetShape = if collided
-                        then tetShape fall' -- Make new falling block
-                        else tetShape''
+    pos = blockPoints fall''
+    fall'' = fallBlock fall'
+    collided = hasCollided for' (pos)
+
+    chosenBlock :: FallingBlock
+    chosenBlock = if collided
+                    then newFallingBlock r -- Make new falling block
+                    else fall''
                              
     for'' = if collided
                then moveToForeground fall' for'
                else for'
-                    
-    tetShape'' = [(row+1, col) | (row, col) <- tetShape fall']
+               
+    
 
