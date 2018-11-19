@@ -10,7 +10,8 @@ import Graphics.Gloss.Interface.Pure.Game
 data Game = Play {for   :: Foreground,
                   back  :: Background,
                   wtf   :: Word2Find,
-                  fall  :: FallingBlock}
+                  fall  :: FallingBlock,
+                  accTime :: Float}
           | Menu {menu :: Menu}
 
 data Tetramino = I | O | T | S | Z | J | L
@@ -21,6 +22,8 @@ data Background = Background [[Maybe (Char, Int)]]
 
 data Word2Find = Word2Find String
 
-data FallingBlock = FallingBlock Tetramino Int [(Int,Int)]
+data FallingBlock = FallingBlock { tetra :: Tetramino
+                                 , rotation :: Int
+                                 , tetShape :: [(Int,Int)] }
 
 data Menu = M Int
