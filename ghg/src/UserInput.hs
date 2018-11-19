@@ -1,3 +1,5 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module UserInput (eventHandler) where
 
 import Prelude hiding (Right, Left)
@@ -10,6 +12,7 @@ data Move = Rotate Direction
           | Move Direction
           | FastDrop
           | WordInput Char
+          | Start
           deriving Show
 
 eventHandler :: Event -> Game -> Game
@@ -24,9 +27,14 @@ getMove (EventKey (SpecialKey key) Down _ _) =
     KeyLeft  -> Just (Move Left)
     KeySpace -> Just FastDrop
     _        -> Nothing
+getMove (EventKey (Char 's') Down _ _) = Just Start
 getMove (EventKey (Char c) Down _ _) = Just (WordInput c)
 getMove _ = Nothing
 
 update :: Maybe Move -> Game -> Game
-update (Just x) g = traceShow (Just x) g
+update x y = traceShow (x, y) y
+update (Just x) g@Play{} = 
+  case x of
+    Rotate Right -> traceShow (fall g) g
+    _ -> g
 update Nothing g = g
