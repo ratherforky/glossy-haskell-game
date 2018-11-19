@@ -10,7 +10,9 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import System.Random
 
-data Game = Play {for   :: Foreground,
+data Fg = Fg [((Int, Int), Tetramino)]
+
+data Game = Play {for   :: Fg,
                   back  :: Background,
                   wtf   :: Word2Find,
                   fall  :: FallingBlock,
@@ -57,6 +59,7 @@ data FallingBlock = FallingBlock Tetramino (Float, Float) Rotation deriving Show
 
 data Rotation = North | South | East | West deriving Show
 
+data Tetramino = I | O | T | S | Z | J | L deriving (Show, Ord, Eq)
 
 -- Rotation about the origin
 rotRight90 :: (Float, Float) -> (Float, Float)
