@@ -20,18 +20,11 @@ moveToForeground :: FallingBlock -> Fg -> Fg
 moveToForeground fb@(FallingBlock tetra _ _) (Fg ts) =
   Fg $ merge (zip (blockPoints fb) (repeat tetra)) ts
 
-
--- TODO: ADD TO THIS
-newFallingBlock :: Float -> FallingBlock
-newFallingBlock r = FallingBlock ([minBound..maxBound] !! ((floor r) `mod` 7))
-                                 (0, 5)
-                                 North
-
 fallBlock :: FallingBlock -> FallingBlock
 fallBlock (FallingBlock tet (y, x) rot) = FallingBlock tet (y+1, x) rot
 
 worldStepper :: Float -> Game -> Game
-worldStepper dt (Menu menu) = Menu menu
+worldStepper dt (Menu menu rs) = Menu menu rs
 worldStepper dt game
   | (accTime game) + dt < (interval / (acceleration game)) = game { accTime = (accTime game) + dt }
   | otherwise = game { for = for'''

@@ -4,8 +4,10 @@
 module UserInput (eventHandler) where
 
 import Prelude hiding (Right, Left)
+import qualified Prelude as P
 import Lib hiding (Rotate)
 import Debug.Trace
+-- import System.Random
 
 data Direction = Left | Right deriving Show
 
@@ -46,7 +48,7 @@ movePoint Left c = addPointPoint c (0, -1)
 
 update :: Maybe Move -> Game -> Game
 -- update x y = traceShow (x, y) y
-update (Just (FastDrop _)) g@Menu{} = traceShow "Hey we're doing a thing now." $ initial_game 10 10
+update (Just (FastDrop _)) g@Menu{rands} = initial_game (P.Right rands)
 update (Just x) g@Play{fall = FallingBlock t c r, acceleration} =
   case traceShowId x of
     Rotate d -> changeIfNoCollision (FallingBlock t c (rotateCompass d r)) g
