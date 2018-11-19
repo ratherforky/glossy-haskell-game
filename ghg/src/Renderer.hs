@@ -48,13 +48,13 @@ rendWord s = [Text s]
 --makeColor red green blue alpha
 
 rendTetramino :: Tetramino -> Picture -> Picture
-rendTetramino I p = Color (makeColor 0 0.9 0.9 1) p
-rendTetramino O p = Color (makeColor 0.9 0.9 0 1) p
-rendTetramino T p = Color (makeColor 0.9 0 0.9 1) p
-rendTetramino S p = Color (makeColor 0 0.9 0 1) p
-rendTetramino Z p = Color (makeColor 0.9 0 0 1) p
-rendTetramino J p = Color (makeColor 0 0 0.9 1) p
-rendTetramino L p = Color (makeColor 0.9 0.35 0 1) p
+rendTetramino I p = Color (makeColor 0.18 0.17 0.67 1) p
+rendTetramino O p = Color (makeColor 0.68 0.17 0.67 1) p
+rendTetramino T p = Color (makeColor 0.89 0.15 0.57 1) p
+rendTetramino S p = Color (makeColor 0.97 0.08 0.40 1) p
+rendTetramino Z p = Color (makeColor 0.97 0.86 0.08 1) p
+rendTetramino J p = Color (makeColor 0    0.62 0.69 1) p
+rendTetramino L p = Color (makeColor 0.67 1    0    1) p
 
 arrayBasic :: [[Picture]] -> [Picture]
 arrayBasic = foldr f [] where
