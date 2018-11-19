@@ -33,16 +33,21 @@ moveToForeground :: FallingBlock -> Fg -> Fg
 moveToForeground (FallingBlock tetra _ tetShape) (Fg ts) =
   Fg $ merge (zip tetShape (repeat tetra)) ts
 
+newFallingBlock :: Float -> FallingBlock
+newFallingBlock r = FallingBlock ([minBound..maxBound] !! (floor 7*r))
+                                 0
+                                 --insert tetShape
+
 worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu) = Menu menu
 worldStepper dt game
   | (accTime game) + dt < interval = game { accTime = (accTime game) + dt }
-  | otherwise = game { for = for'
+  | otherwise = game { for = for''
                      , back = back'
                      , fall = fall''
                      , accTime = 0 }
   where
-    (Play for' back' wtf' fall' accTime') = game
+    (Play for' back' wtf' fall' accTime' rands') = game
     
     fall'' = fall' { tetShape = chosenTetShape }
     collided = hasCollided for' tetShape''
