@@ -23,10 +23,11 @@ initial_game :: Int -> Int -> Game
 initial_game width height = Play{..}
   where
     for  = Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
-    back = Background ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
+    back = Background ((map . map) (const (Nothing,0)) [[1..width] | _ <- [1..height]])
     wtf  = Word2Find "hello"
-    fall = FallingBlock I (0, fromIntegral $ width `div` 2) North
+    fall = FallingBlock S (0, fromIntegral $ width `div` 2) North
     word = ""
+    rands = []
 
 data Tetramino = I | O | T | S | Z | J | L deriving Show
 
@@ -37,12 +38,9 @@ data Foreground = Foreground [[Maybe Tetramino]] deriving Show
 randomVals :: Float -> [Float]
 randomVals seed = randomRs (-100,100) (mkStdGen ((fromInteger . toInteger . floor) seed))
 
-blockPoints :: FallingBlock -> [(Int,Int)]
-blockPoints _ = []
-
 initData :: Game
 --initData = Menu {menu = (M 0)}
-initData = (Play {for = initArrFor, back = initArrBack, wtf = (Word2Find "Codeword"), fall = (FallingBlock I (0,0) North), word = "Hi"})
+initData = (Play {for = initArrFor, back = initArrBack, wtf = (Word2Find "Codeword"), fall = (FallingBlock J (0,0) North), word = "Hi", rands = []})
 
 initArrFor :: Foreground
 initArrFor = Foreground ([b,b,b,b,b,b,b,b]) where

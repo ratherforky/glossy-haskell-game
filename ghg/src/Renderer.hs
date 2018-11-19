@@ -10,7 +10,7 @@ basicBlock x y = (Polygon [(0,0),(0,y),(x,y),(x,0)])
 
 game2Pic :: Game -> Picture
 game2Pic (Menu x) = rendMenu x
-game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2) (-yLength/2) (Pictures (bg ++ rendBack b ++ rendFor f ++ rendFall p ++ (fmap (Translate (-xLength/2) (-yLength/2)) (rendWord w)))) where
+game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2) (-yLength/2) (Pictures (bg ++ rendBack b ++ rendFor f ++ rendFall p yLength ++ (fmap (Translate (-xLength/2) (-yLength/2)) (rendWord w)))) where
   bArr    = g b
   yLength = (fromIntegral (length bArr)) * blockSize
   xLength = (fromIntegral (length (head bArr))) * blockSize
@@ -38,10 +38,10 @@ rendFor (Foreground ps) = arrayBasic (fmap (fmap f) ps) where
   f (Just x) = rendTetramino x (basicBlock blockSize blockSize)
   f Nothing  = Blank
 
-rendFall :: FallingBlock -> [Picture]
-rendFall = (fmap f) . blockPoints where
-  f :: (Int,Int) -> Picture
-  f (y,x) = Translate ((fromIntegral x) * blockSize) (-(fromIntegral y) * blockSize) (basicBlock blockSize blockSize)
+rendFall :: FallingBlock -> Float -> [Picture]
+rendFall b@(FallingBlock tet _ _) t = ((fmap ((rendTetramino tet) . (f t))) . blockPoints) b where
+  f :: Float -> (Int,Int) -> Picture
+  f top (y,x) = Translate ((fromIntegral x) * blockSize) (top - ((fromIntegral y) * blockSize)) (basicBlock blockSize blockSize)
 
 rendWord :: String -> [Picture]
 rendWord s = [Text s]
