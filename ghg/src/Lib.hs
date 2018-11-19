@@ -31,8 +31,8 @@ data Game = Play {for   :: Fg,
                   rands :: [Float]}
           deriving Show
 
-initial_game :: Either StdGen [Float] -> Game
-initial_game seed = Play{..}
+initial_game :: [Float] -> Game
+initial_game (r:rands) = Play{..}
   where
     for     = Fg []--Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
     back    = Background ((map . map) (const (Nothing,0)) [[1..worldWidth] | _ <- [1..worldHeight]])
@@ -40,7 +40,6 @@ initial_game seed = Play{..}
     -- fall    = FallingBlock S (0, fromIntegral $ width `div` 2) North
     fall      = newFallingBlock r
     word      = ""
-    (r:rands) = either randomVals id seed
     accTime = 0
     acceleration = 1
 
@@ -54,9 +53,6 @@ newFallingBlock r = FallingBlock ([minBound..maxBound] !! ((floor r) `mod` 7))
 data Background = Background [[(Maybe Char, Int)]] deriving Show
 
 data Foreground = Foreground [[Maybe Tetramino]] deriving Show
-
-randomVals :: StdGen -> [Float]
-randomVals seed = randomRs (-100,100) seed--(mkStdGen ((fromInteger . toInteger . floor) seed))
 
 -- initData :: Game
 -- --initData = Menu {menu = (M 0)}

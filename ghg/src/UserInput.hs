@@ -48,7 +48,7 @@ movePoint Left c = addPointPoint c (0, -1)
 
 update :: Maybe Move -> Game -> Game
 -- update x y = traceShow (x, y) y
-update (Just (FastDrop _)) g@Menu{rands} = initial_game (P.Right rands)
+update (Just (FastDrop _)) g@Menu{rands} = initial_game rands
 update (Just x) g@Play{fall = FallingBlock t c r, acceleration} =
   case traceShowId x of
     Rotate d -> changeIfNoCollision (FallingBlock t c (rotateCompass d r)) g
