@@ -15,7 +15,8 @@ data Game = Play {for   :: Foreground,
                   wtf   :: Word2Find,
                   fall  :: FallingBlock,
                   word  :: String,
-                  rands :: [Float]}
+                  rands :: [Float],
+                  accTime :: Float}
           | Menu {menu :: Menu}
           deriving Show
 
@@ -104,3 +105,8 @@ rotateAboutPoint East  = rotRight90Point
 blockPoints (FallingBlock t center rotation) = map (\(x, y) -> (floor x, floor y)) . rotatePointsAboutPoint rotation center . addPointPoints center . basePoints $ t
 
 data Menu = M Int deriving Show
+{-
+data FallingBlock = FallingBlock { tetra :: Tetramino
+                                 , rotation :: Int
+                                 , tetShape :: [(Int,Int)] }
+-}
