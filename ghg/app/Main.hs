@@ -1,6 +1,8 @@
 module Main where
 
 import Lib
+import Graphics.Gloss
+import Graphics.Gloss.Interface.Pure.Game
 
 data Game = Play {for   :: Foreground,
                   back  :: Background,
