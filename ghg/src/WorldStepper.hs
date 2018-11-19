@@ -17,7 +17,9 @@ hasCollided (Fg tetras) = foldr f k
   where
     k = False
     f _ True = True
-    f coords False = elem coords (map fst tetras)
+    f (col, row) False
+      | row >= worldHeight = True
+      | otherwise = elem (col, row) (map fst tetras)
 
 merge :: (Ord a) => [a] -> [a] -> [a]
 merge [] ys = ys
