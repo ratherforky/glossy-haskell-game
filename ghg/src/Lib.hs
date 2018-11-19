@@ -59,7 +59,7 @@ data FallingBlock = FallingBlock Tetramino (Float, Float) Rotation deriving Show
 
 data Rotation = North | South | East | West deriving Show
 
-data Tetramino = I | O | T | S | Z | J | L deriving (Show, Ord, Eq)
+data Tetramino = I | O | T | S | Z | J | L deriving (Ord, Eq, Enum, Bounded)
 
 -- Rotation about the origin
 rotRight90 :: (Float, Float) -> (Float, Float)
