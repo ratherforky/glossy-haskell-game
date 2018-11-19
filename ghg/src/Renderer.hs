@@ -9,7 +9,7 @@ basicBlock :: Float -> Float -> Picture
 basicBlock x y = (Polygon [(0,0),(0,y),(x,y),(x,0)])
 
 game2Pic :: Game -> Picture
-game2Pic (Menu x) = rendMenu x
+game2Pic (Menu x _) = rendMenu x
 game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2) (-yLength/2) (Pictures (bg ++ rendBack b ++ rendFor f yLength ++ rendFall p yLength ++ (fmap (Translate (xLength) (0)) (rendWord w)))) where
   bArr    = g b
   yLength = (fromIntegral (length bArr)) * blockSize
