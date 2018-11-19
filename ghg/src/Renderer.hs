@@ -3,42 +3,59 @@ module Renderer (game2Pic) where
 import Lib
 
 blockSize :: Float
-blockSize = 10
+blockSize = 40
 
+basicBlock :: Float -> Float -> Picture
+basicBlock x y = (Polygon [(0,0),(0,y),(x,y),(x,0)])
 
 game2Pic :: Game -> Picture
 game2Pic (Menu x) = rendMenu x
-game2Pic (Play {for = f,back = b, fall = p}) = Pictures (rendBack b ++ rendFor f ++ rendFall p)
+game2Pic (Play {for = f, back = b, fall = p, word = w}) = Translate (-xLength/2) (-yLength/2) (Pictures (bg ++ rendBack b ++ rendFor f ++ rendFall p ++ (fmap (Translate (-xLength/2) (-yLength/2)) (rendWord w)))) where
+  bArr    = g b
+  yLength = (fromIntegral (length bArr)) * blockSize
+  xLength = (fromIntegral (length (head bArr))) * blockSize
+  bg :: [Picture]
+  bg      = [Color (makeColor 0.5 0.5 0.5 1) (basicBlock xLength yLength)]
+  g :: Background -> [[(Maybe Char, Int)]]
+  g (Background bs) = bs
 
 rendMenu :: Menu -> Picture
-rendMenu (M i) = Blank
+rendMenu (M i) = Pictures [Color (red) (Polygon [(-170,-50),(170,-50),(170,50),(-170,50)]),
+                              Translate (-140) (-25) (Scale 0.4 0.4  (Text "Play Game")),
+                              Color (blue) (Line [(-170,-50),(170,-50),(170,50),(-170,50),(-170,-50)])
+                             ]
 
 rendBack :: Background -> [Picture]
 rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where
   f :: (Maybe Char, Int) -> Picture
-  f (_, x) = Color (makeColor 1 1 1 (g x)) (Polygon [(0,0),(0,blockSize),(blockSize,blockSize),(blockSize,0)])
+  f (_, x) = Color (makeColor 1 1 1 (g x)) (basicBlock blockSize blockSize)
   g :: Int -> Float
   g x = exp (-(((fromIntegral x) + 1)/ 3))
 
 rendFor :: Foreground -> [Picture]
 rendFor (Foreground ps) = arrayBasic (fmap (fmap f) ps) where
   f :: Maybe Tetramino -> Picture
-  f (Just x) = rendTetramino x (Polygon [(0,0),(0,blockSize),(blockSize,blockSize),(blockSize,0)])
+  f (Just x) = rendTetramino x (basicBlock blockSize blockSize)
   f Nothing  = Blank
 
 rendFall :: FallingBlock -> [Picture]
-rendFall (FallingBlock t i is) = [Blank]
+rendFall = (fmap f) . blockPoints where
+  f :: (Int,Int) -> Picture
+  f (y,x) = Translate ((fromIntegral x) * blockSize) (-(fromIntegral y) * blockSize) (basicBlock blockSize blockSize)
+
+rendWord :: String -> [Picture]
+rendWord s = [Text s]
 
 --makeColor red green blue alpha
 
 rendTetramino :: Tetramino -> Picture -> Picture
-rendTetramino I p = Color (makeColor 0 1 1 1) p
-rendTetramino O p = Color (makeColor 1 1 0 1) p
-rendTetramino T p = Color (makeColor 1 0 1 1) p
-rendTetramino S p = Color (makeColor 0 1 0 1) p
-rendTetramino Z p = Color (makeColor 1 0 0 1) p
-rendTetramino J p = Color (makeColor 0 0 1 1) p
-rendTetramino L p = Color (makeColor 1 0.5 0 1) p
+rendTetramino I p = Color (makeColor 0 0.9 0.9 1) p
+rendTetramino O p = Color (makeColor 0.9 0.9 0 1) p
+rendTetramino T p = Color (makeColor 0.9 0 0.9 1) p
+rendTetramino S p = Color (makeColor 0 0.9 0 1) p
+rendTetramino Z p = Color (makeColor 0.9 0 0 1) p
+rendTetramino J p = Color (makeColor 0 0 0.9 1) p
+rendTetramino L p = Color (makeColor 0.9 0.35 0 1) p
 
 arrayBasic :: [[Picture]] -> [Picture]
 arrayBasic = foldr f [] where
@@ -47,4 +64,4 @@ arrayBasic = foldr f [] where
 
 remBlankFold :: (Float,Picture) -> [Picture] -> [Picture]
 remBlankFold (_,Blank) ps = ps
-remBlankFold (f,p)     ps = (Translate f 0 p):(ps)
+remBlankFold (f,p)     ps = (Translate (f*blockSize) 0 p):(ps)
