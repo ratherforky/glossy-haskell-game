@@ -17,9 +17,9 @@ hasCollided (Fg tetras) = foldr f k
   where
     k = False
     f _ True = True
-    f (col, row) False
+    f (row, col) False
       | row >= worldHeight = True
-      | otherwise = elem (col, row) (map fst tetras)
+      | otherwise = elem (row, col) (map fst tetras)
 
 merge :: (Ord a) => [a] -> [a] -> [a]
 merge [] ys = ys
@@ -30,20 +30,21 @@ merge (x:xs) (y:ys)
 
 --Assumes both lists sorted
 moveToForeground :: FallingBlock -> Fg -> Fg
-moveToForeground (FallingBlock tetra _ tetShape) (Fg ts) =
-  Fg $ merge (zip tetShape (repeat tetra)) ts
+moveToForeground fb@(FallingBlock tetra _ _) (Fg ts) =
+  Fg $ merge (zip (blockPoints fb) (repeat tetra)) ts
 
+
+-- TODO: ADD TO THIS
 newFallingBlock :: Float -> FallingBlock
 newFallingBlock r = FallingBlock ([minBound..maxBound] !! (floor 7*r))
-                                 0
-                                 --insert tetShape
+                                 (0, 5)
+                                 North
 
 worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu) = Menu menu
 worldStepper dt game
   | (accTime game) + dt < interval = game { accTime = (accTime game) + dt }
   | otherwise = game { for = for''
-                     , back = back'
                      , fall = fall''
                      , accTime = 0 }
   where
@@ -59,5 +60,5 @@ worldStepper dt game
                then moveToForeground fall' for'
                else for'
                     
-    tetShape'' = [(col+1, row) | (col, row) <- tetShape fall']
+    tetShape'' = [(row+1, col) | (row, col) <- tetShape fall']
 
