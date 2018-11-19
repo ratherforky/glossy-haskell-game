@@ -1,3 +1,5 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module Lib
   ( module Lib
   , module Graphics.Gloss
@@ -17,13 +19,14 @@ data Game = Play {for   :: Foreground,
           | Menu {menu :: Menu}
           deriving Show
 
--- initial_game width height = Play
---   where
---     for  = Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
---     back = Background ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
---     wtf  = "hello"
---     fall = FallingBlock I [(10, 10), (10, 11), (10, 12), (10, 13)]
---     word = ""
+initial_game :: Int -> Int -> Game
+initial_game width height = Play{..}
+  where
+    for  = Foreground ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
+    back = Background ((map . map) (const Nothing) [[1..width] | _ <- [1..height]])
+    wtf  = Word2Find "hello"
+    fall = FallingBlock I (0, fromIntegral $ width `div` 2) North
+    word = ""
 
 data Tetramino = I | O | T | S | Z | J | L deriving Show
 

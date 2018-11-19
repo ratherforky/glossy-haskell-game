@@ -1,4 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE NamedFieldPuns #-}
 
 module UserInput (eventHandler) where
 
@@ -27,14 +28,28 @@ getMove (EventKey (SpecialKey key) Down _ _) =
     KeyLeft  -> Just (Move Left)
     KeySpace -> Just FastDrop
     _        -> Nothing
-getMove (EventKey (Char 's') Down _ _) = Just Start
+-- getMove (EventKey (Char '(' Down _ _) = Just Start
 getMove (EventKey (Char c) Down _ _) = Just (WordInput c)
 getMove _ = Nothing
 
+rotateCompass Right North = East
+rotateCompass Right East = South
+rotateCompass Right South = West
+rotateCompass Right West = North
+rotateCompass Left n = rotateCompass Right . rotateCompass Right . rotateCompass Right $ n
+
+movePoint Right c = addPointPoint c (0, 1)
+movePoint Left c = addPointPoint c (0, -1)
+
+
 update :: Maybe Move -> Game -> Game
-update x y = traceShow (x, y) y
-update (Just x) g@Play{} = 
-  case x of
-    Rotate Right -> traceShow (fall g) g
+-- update x y = traceShow (x, y) y
+update (Just FastDrop) g@Menu{} = traceShow "Hey we're doing a thing now." $ initial_game 10 10
+update (Just x) g@Play{fall = FallingBlock t c r} =
+  case traceShowId x of
+    Rotate d -> g { fall = FallingBlock t c (rotateCompass d r)}
+    Move d -> g { fall = FallingBlock t (movePoint d c) r}
+    FastDrop -> g -- Bump the tick rate by some scaler
+    WordInput c -> g { word = (word g) ++ [c] }
     _ -> g
-update Nothing g = g
+update _ g = g
