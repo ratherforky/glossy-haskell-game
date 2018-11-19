@@ -39,17 +39,17 @@ data Foreground = Foreground [[Maybe Tetramino]] deriving Show
 randomVals :: Float -> [Float]
 randomVals seed = randomRs (-100,100) (mkStdGen ((fromInteger . toInteger . floor) seed))
 
-initData :: Game
---initData = Menu {menu = (M 0)}
-initData = (Play {for = initArrFor, back = initArrBack, wtf = (Word2Find "Codeword"), fall = (FallingBlock J (0,0) North), word = "Hi", rands = []})
+-- initData :: Game
+-- --initData = Menu {menu = (M 0)}
+-- initData = (Play {for = initArrFor, back = initArrBack, wtf = (Word2Find "Codeword"), fall = (FallingBlock J (0,0) North), word = "Hi", rands = []})
 
-initArrFor :: Foreground
-initArrFor = Foreground ([b,b,b,b,b,b,b,b]) where
-  b = [(Just O),(Just T),(Just S),(Just Z)]
+-- initArrFor :: Foreground
+-- initArrFor = Foreground ([b,b,b,b,b,b,b,b]) where
+--   b = [(Just O),(Just T),(Just S),(Just Z)]
 
-initArrBack :: Background
-initArrBack = Background ([b,b,b,b,b,b,b,b]) where
-  b = [(Nothing,0),(Nothing,0),(Nothing,0),(Nothing,0)]
+-- initArrBack :: Background
+-- initArrBack = Background ([b,b,b,b,b,b,b,b]) where
+--   b = [(Nothing,0),(Nothing,0),(Nothing,0),(Nothing,0)]
 
 data Word2Find = Word2Find String deriving Show
 
