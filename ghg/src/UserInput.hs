@@ -20,7 +20,7 @@ eventHandler :: Event -> Game -> Game
 eventHandler e = update (getMove e)
 
 getMove :: Event -> Maybe Move
-getMove (EventKey (SpecialKey key) Down _ _) = 
+getMove (EventKey (SpecialKey key) Down _ _) =
   case key of
     KeyUp    -> Just (Rotate Right)
     KeyDown  -> Just (Rotate Left)
@@ -47,9 +47,14 @@ update :: Maybe Move -> Game -> Game
 update (Just FastDrop) g@Menu{} = traceShow "Hey we're doing a thing now." $ initial_game 10 10
 update (Just x) g@Play{fall = FallingBlock t c r} =
   case traceShowId x of
-    Rotate d -> g { fall = FallingBlock t c (rotateCompass d r)}
-    Move d -> g { fall = FallingBlock t (movePoint d c) r}
+    Rotate d -> changeIfNoCollision (FallingBlock t c (rotateCompass d r)) g
+    Move d -> changeIfNoCollision (FallingBlock t (movePoint d c) r) g
     FastDrop -> g -- Bump the tick rate by some scaler
     WordInput c -> g { word = (word g) ++ [c] }
     _ -> g
 update _ g = g
+
+changeIfNoCollision :: FallingBlock -> Game -> Game
+changeIfNoCollision b g | hasCollided (for g) b = g
+                        | wallCollision b       = g
+                        | otherwise             = g {fall = b}

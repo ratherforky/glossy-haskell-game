@@ -111,6 +111,20 @@ rotateAboutPoint East  = rotRight90Point
 -- blockPoints :: FallingBlock -> [(Int, Int)]
 blockPoints (FallingBlock t center rotation) = map (\(x, y) -> (floor x, floor y)) . rotatePointsAboutPoint rotation center . addPointPoints center . basePoints $ t
 
+hasCollided :: Fg -> FallingBlock -> Bool
+hasCollided (Fg tetras) = (foldr f k) . blockPoints
+  where
+    k = False
+    f _ True = True
+    f (row, col) False
+      | row > worldHeight = True
+      | otherwise = elem (row, col) (map fst tetras)
+
+wallCollision :: FallingBlock -> Bool
+wallCollision = (any f) . blockPoints where
+  f :: (Int,Int) -> Bool
+  f (y,x) = (x < 0) || (x >= worldWidth)
+
 data Menu = M Int deriving Show
 {-
 data FallingBlock = FallingBlock { tetra :: Tetramino

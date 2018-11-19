@@ -2,18 +2,11 @@ module WorldStepper (worldStepper) where
 
 import Lib
 import Data.Maybe
+import Data.List
+import Debug.Trace
 
 interval :: Float
 interval = 0.5
-
-hasCollided :: Fg -> [(Int, Int)] -> Bool
-hasCollided (Fg tetras) = foldr f k
-  where
-    k = False
-    f _ True = True
-    f (row, col) False
-      | row > worldHeight = True
-      | otherwise = elem (row, col) (map fst tetras)
 
 merge :: (Ord a) => [a] -> [a] -> [a]
 merge [] ys = ys
@@ -41,25 +34,30 @@ worldStepper :: Float -> Game -> Game
 worldStepper dt (Menu menu) = Menu menu
 worldStepper dt game
   | (accTime game) + dt < interval = game { accTime = (accTime game) + dt }
-  | otherwise = game { for = for''
+  | otherwise = game { for = for'''
                      , fall = chosenBlock
                      , accTime = 0
                      , rands = rands' }
   where
     (Play for' back' wtf' fall' _ (r:rands') accTime') = game
-    
-    pos = blockPoints fall''
+
     fall'' = fallBlock fall'
-    collided = hasCollided for' (pos)
+    collided = hasCollided for' (fall'')
 
     chosenBlock :: FallingBlock
     chosenBlock = if collided
                     then newFallingBlock r -- Make new falling block
                     else fall''
-                             
+
     for'' = if collided
                then moveToForeground fall' for'
                else for'
-               
-    
+    for''' = removeFullRows for''
 
+removeFullRows :: Fg -> Fg
+removeFullRows (Fg xs) = Fg (concat . filter ((/= worldWidth) . length) $ ys)  where
+  ys = traceShowId $ ((groupBy f) . (sortBy g)) xs
+  f :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Bool
+  f ((_,x),_) ((_,y),_) = x == y
+  g :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Ordering
+  g ((_,x),_) ((_,y),_) = compare x y
