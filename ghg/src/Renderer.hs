@@ -23,8 +23,8 @@ rendBack (Background ps) = arrayBasic (fmap (fmap f) ps) where
 rendFor :: Foreground -> [Picture]
 rendFor (Foreground ps) = arrayBasic (fmap (fmap f) ps) where
   f :: Maybe Tetramino -> Picture
-  f (Just x) = rendTetramino x (f Nothing)
-  f Nothing  = (Polygon [(0,0),(0,blockSize),(blockSize,blockSize),(blockSize,0)])
+  f (Just x) = rendTetramino x (Polygon [(0,0),(0,blockSize),(blockSize,blockSize),(blockSize,0)])
+  f Nothing  = Blank
 
 rendFall :: FallingBlock -> [Picture]
 rendFall (FallingBlock t i is) = [Blank]
@@ -43,4 +43,8 @@ rendTetramino L p = Color (makeColor 1 0.5 0 1) p
 arrayBasic :: [[Picture]] -> [Picture]
 arrayBasic = foldr f [] where
   f :: [Picture] -> [Picture] -> [Picture]
-  f xs ps = (fmap (Translate 0 blockSize) ps) ++ (map (\(a,b) -> (Translate a 0 b)) (zip [0..] xs))
+  f xs ps = (fmap (Translate 0 blockSize) ps) ++ (foldr remBlankFold [] (zip [0..] xs))
+
+remBlankFold :: (Float,Picture) -> [Picture] -> [Picture]
+remBlankFold (_,Blank) ps = ps
+remBlankFold (f,p)     ps = (Translate f 0 p):(ps)
