@@ -11,7 +11,7 @@ data Direction = Left | Right deriving Show
 
 data Move = Rotate Direction
           | Move Direction
-          | FastDrop
+          | FastDrop Bool
           | WordInput Char
           | Start
           deriving Show
@@ -26,9 +26,11 @@ getMove (EventKey (SpecialKey key) Down _ _) =
     KeyDown  -> Just (Rotate Left)
     KeyRight -> Just (Move Right)
     KeyLeft  -> Just (Move Left)
-    KeySpace -> Just FastDrop
+    KeySpace -> Just (FastDrop True)
     _        -> Nothing
 -- getMove (EventKey (Char '(' Down _ _) = Just Start
+getMove (EventKey (SpecialKey KeySpace) Up _ _) = Just $ FastDrop False
+
 getMove (EventKey (Char c) Down _ _) = Just (WordInput c)
 getMove _ = Nothing
 
@@ -44,12 +46,13 @@ movePoint Left c = addPointPoint c (0, -1)
 
 update :: Maybe Move -> Game -> Game
 -- update x y = traceShow (x, y) y
-update (Just FastDrop) g@Menu{} = traceShow "Hey we're doing a thing now." $ initial_game 10 10
-update (Just x) g@Play{fall = FallingBlock t c r} =
+update (Just (FastDrop _)) g@Menu{} = traceShow "Hey we're doing a thing now." $ initial_game 10 10
+update (Just x) g@Play{fall = FallingBlock t c r, acceleration} =
   case traceShowId x of
     Rotate d -> changeIfNoCollision (FallingBlock t c (rotateCompass d r)) g
     Move d -> changeIfNoCollision (FallingBlock t (movePoint d c) r) g
-    FastDrop -> g -- Bump the tick rate by some scaler
+    FastDrop True -> g { acceleration = acceleration * 10 } -- Bump the tick rate by some scaler
+    FastDrop False -> g { acceleration = acceleration / 10 }
     WordInput c -> g { word = (word g) ++ [c] }
     _ -> g
 update _ g = g

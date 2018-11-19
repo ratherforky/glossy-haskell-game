@@ -24,7 +24,8 @@ data Game = Play {for   :: Fg,
                   fall  :: FallingBlock,
                   word  :: String,
                   rands :: [Float],
-                  accTime :: Float}
+                  accTime :: Float,
+                  acceleration :: Float}
           | Menu {menu :: Menu}
           deriving Show
 
@@ -38,6 +39,7 @@ initial_game width height = Play{..}
     word    = ""
     rands   = randomVals 1
     accTime = 0
+    acceleration = 1
 
 data Background = Background [[(Maybe Char, Int)]] deriving Show
 
