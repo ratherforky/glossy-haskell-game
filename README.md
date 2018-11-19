@@ -6,6 +6,8 @@ To install Stack and get a general idea of workflow, follow [this guide](https:/
 
 Then navigate to the `ghg` directory and run `stack build`. It should do everything for you.
 
+Make sure you have `freeglut3`/`lib32-freeglut` and `freeglut3-dev`/`lib32-freeglut`.
+
 ## Adding new packages
 
 In all cases, run `stack build` again after changing things.
