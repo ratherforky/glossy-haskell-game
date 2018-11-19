@@ -24,7 +24,10 @@ main :: IO ()
 main = play FullScreen black 60 (Menu (M 0)) game2Pic eventHandler worldStepper
 
 game2Pic :: Game -> Picture
+game2Pic = undefined
 
 eventHandler :: Event -> Game -> Game
+eventHandler = undefined
 
 worldStepper :: Float -> Game -> Game
+worldStepper = undefined
