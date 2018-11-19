@@ -26,11 +26,8 @@ main :: IO ()
 main = play FullScreen black 60 (Menu (M 0)) game2Pic eventHandler worldStepper
 
 game2Pic :: Game -> Picture
-game2Pic (Menu x _) = Pictures [Color (menuColorByInt x) (Polygon [(-170,-50),(170,-50),(170,50),(-170,50)]),
-                              Translate (-140) (-25) (Scale 0.4 0.4  (Text "Play Game")),
-                              Color (menuColorByInt (x + 10)) (Line [(-170,-50),(170,-50),(170,50),(-170,50),(-170,-50)])
-                             ]
-game2Pic (Play a) = undefined
+game2Pic (Menu x) = undefined
+game2Pic (Play {..}) = undefined
 
 eventHandler :: Event -> Game -> Game
 eventHandler e g = g
