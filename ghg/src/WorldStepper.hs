@@ -55,9 +55,13 @@ worldStepper dt game
     for''' = removeFullRows for''
 
 removeFullRows :: Fg -> Fg
-removeFullRows (Fg xs) = Fg (concat . filter ((/= worldWidth) . length) $ ys)  where
-  ys = traceShowId $ ((groupBy f) . (sortBy g)) xs
+removeFullRows (Fg xs) = Fg (fst . foldr f' ([],0) $ ys)  where
+  ys = ((groupBy f) . (sortBy g)) xs
   f :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Bool
-  f ((_,x),_) ((_,y),_) = x == y
+  f ((a,_),_) ((b,_),_) = a == b
   g :: ((Int,Int),Tetramino) -> ((Int,Int),Tetramino) -> Ordering
-  g ((_,x),_) ((_,y),_) = compare x y
+  g ((a,_),_) ((b,_),_) = compare a b
+  f' :: [((Int,Int),Tetramino)] -> ([((Int,Int),Tetramino)], Int) -> ([((Int,Int),Tetramino)], Int)
+  f' ps (ts, offset)
+    | (/= worldWidth) . length $ ps = (map (\((y, x), t) -> ((y + offset, x), t)) ps ++ ts, offset)
+    | otherwise = (ts, offset + 1)
