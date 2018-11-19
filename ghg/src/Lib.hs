@@ -84,9 +84,22 @@ basePoints t =
     T -> [(-1, 0), (0, 0), (0, 1), (0 , -1)]
     Z -> [(-1, 0), (0, 0), (-1, -1), (0 , 1)]
 
+rotatePointsAboutPoint :: Rotation -> (Float, Float) -> [(Float, Float)] -> [(Float, Float)]
+rotatePointsAboutPoint rot p ps = map (rotateAboutPoint rot p) ps
+
+addPointPoint :: (Float, Float) -> (Float, Float) -> (Float, Float)
+addPointPoint (x, y) (x', y') = (x + x', y + y')
+
+addPointPoints :: (Float, Float) -> [(Float, Float)] -> [(Float, Float)]
+addPointPoints p ps = map (addPointPoint p) ps
+
+
+rotateAboutPoint North = flip const
+rotateAboutPoint South = rot180Point
+rotateAboutPoint West  = rotLeft90Point
+rotateAboutPoint East  = rotRight90Point
+
 -- blockPoints :: FallingBlock -> [(Int, Int)]
--- blockPoints (FallingBlock tetramino center rotation) =
-  -- case tetramino of
-    -- I ->
+blockPoints (FallingBlock t center rotation) = map (\(x, y) -> (floor x, floor y)) . rotatePointsAboutPoint rotation center . addPointPoints center . basePoints $ t
 
 data Menu = M Int deriving Show
